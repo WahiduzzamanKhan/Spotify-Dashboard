@@ -1,0 +1,45 @@
+# creating the UI ----------------------------------------------------
+ui <- tags$html(
+  # adding custom styles ---------------------------------------------
+  tags$head(
+    tags$link(rel="preconnect", href="https://fonts.gstatic.com"),
+    tags$link(rel = "stylesheet", href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap"),
+    tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
+    useShinyjs()
+  ),
+
+  # body -------------------------------------------------------------
+  tags$body(
+    # header ---------------------------------------------------------
+    tags$header(
+      div(
+        class = "container even-columns",
+        div(
+          class = "logo",
+          h1("Spotify Dashboard")
+        ),
+        HTML(
+          '
+          <ul class="social-list" role="list" aria-label="social links">
+              <li><a aria-label="linkedin" href="#"><svg class="social-icon">
+                <use xlink:href="/img/social-icons.svg#linkedin"></use>
+              </svg></a></li>
+              <li><a aria-label="stack-overflow" href="#"><svg class="social-icon">
+                <use xlink:href="/img/social-icons.svg#stack-overflow"></use>
+              </svg></a></li>
+              <li><a aria-label="twitter" href="#"><svg class="social-icon">
+                <use xlink:href="/img/social-icons.svg#twitter"></use>
+              </svg></a></li>
+              <li><a aria-label="github" href="#"><svg class="social-icon">
+                <use xlink:href="/img/social-icons.svg#github"></use>
+              </svg></a></li>
+          </ul>
+          '
+        )
+      )
+    ),
+
+    # main content ---------------------------------------------------
+    uiOutput("authorization_prompt")
+  )
+)
