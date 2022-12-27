@@ -8,7 +8,7 @@
   --clr-background-800: #121212;
   --clr-background-700: #272727;
   --clr-background-500: #1db954;
-  --clr-background-300: #FFC862;
+  --clr-background-300: #ffc862;
   --clr-background-100: #ffffff;
 
   --clr-text-100: #ffffff;
@@ -16,6 +16,13 @@
   --clr-text-300: #aaaaaa;
   --clr-text-500: #1db954;
   --clr-text-900: #191419;
+
+  --clr-info-card-green: #1db954;
+  --clr-info-card-pink: #ffd2d7;
+  --clr-info-card-purple: #c4b1d4;
+  --clr-info-card-blue: #a5bbd1;
+  --clr-info-card-grey: #b3b3b3;
+  --clr-info-card-yellow: #ffc862;
 
   --ff-primary: "Figtree", sans-serif;
 
@@ -164,7 +171,6 @@ header {
   }
 }
 
-
 /*--------------------------------------------------------------
 # components
 --------------------------------------------------------------*/
@@ -176,7 +182,6 @@ header {
   margin-left: auto;
   margin-right: auto;
   color: var(--clr-text-900);
-  border: 2px var(--clr-background-500) solid;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -187,7 +192,6 @@ header {
   height: 230px;
   max-width: 750px;
   padding: 1.5rem;
-  background-color: var(--clr-accent);
   font-weight: 700;
   font-size: var(--fs-800);
 }
@@ -195,7 +199,6 @@ header {
 .card-body {
   background-color: var(--clr-background-100);
   padding: var(--size-500);
-  box-shadow: ;
 }
 
 .card-footer {
@@ -225,7 +228,7 @@ header {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,.8);
+  background-color: rgba(0, 0, 0, 0.8);
 
   display: flex;
   align-items: center;

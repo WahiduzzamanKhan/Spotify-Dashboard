@@ -2,23 +2,11 @@
 server <- function(input, output, session) {
   # show authorizatino promp when the user is not signed in
   output$authorization_prompt <- renderUI({
-    div(
-      class = "container",
-      div(
-        class = "info-card",
-        div(
-          class = "card-header",
-          "Authorize"
-        ),
-        div(
-          class = "card-body",
-          "Authorize the app and give permission to read your Spotify data"
-        ),
-        div(
-          class = "card-footer",
-          actionButton(inputId = "authorize", class = "button-spotify", label = "Authorize")
-        )
-      )
+    spotify_info_card(
+      card_header = "Authorize",
+      card_body = "Authorize the app and give permission to read your Spotify data",
+      card_button_id = "authorize",
+      color = "green"
     )
   })
 
