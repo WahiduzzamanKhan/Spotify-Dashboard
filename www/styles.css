@@ -242,7 +242,6 @@ header {
 }
 
 .modal-header {
-  background-color: var(--clr-background-300);
   padding: var(--size-400);
 }
 

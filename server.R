@@ -3,10 +3,11 @@ server <- function(input, output, session) {
   # show authorizatino promp when the user is not signed in
   output$authorization_prompt <- renderUI({
     spotify_info_card(
-      card_header = "Authorize",
+      card_title = "Authorize",
       card_body = "Authorize the app and give permission to read your Spotify data",
       card_button_id = "authorize",
-      color = "green"
+      card_button_label = "Authorize",
+      color = "pu"
     )
   })
 
@@ -19,21 +20,28 @@ server <- function(input, output, session) {
       runjs(paste0("window.open('", auth_url, "', '_blank')"))
 
       showModal(
-        div(
-          class = "custom-modal-content",
-          div(
-            class = "modal-header even-columns",
-            h2(class = "modal-title", "Inter the code"),
-            actionButton(class = "modal-close", inputId = "modal_close", label = HTML("&times;"))
-          ),
-          div(
-            class = "modal-body",
-            textInput(inputId = "auth_code", label = NULL)
-          ),
-          div(
-            class = "modal-footer",
-            actionButton(class = "button-spotify", inputId = "auth_confirm", label = "Confirm")
-          )
+        # div(
+        #   class = "custom-modal-content",
+        #   div(
+        #     class = "modal-header even-columns",
+        #     h2(class = "modal-title", "Inter the code"),
+        #     actionButton(class = "modal-close", inputId = "modal_close", label = HTML("&times;"))
+        #   ),
+        #   div(
+        #     class = "modal-body",
+        #     textInput(inputId = "auth_code", label = NULL)
+        #   ),
+        #   div(
+        #     class = "modal-footer",
+        #     actionButton(class = "button-spotify", inputId = "auth_confirm", label = "Confirm")
+        #   )
+        # )
+        spotify_modal(
+          modal_title = "Inter the code",
+          modal_body = textInput(inputId = "auth_code", label = NULL),
+          modal_button_id = "auth_confirm",
+          modal_button_label = "Confirm",
+          color = "green"
         )
       )
     }
