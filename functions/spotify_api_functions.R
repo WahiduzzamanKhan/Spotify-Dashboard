@@ -51,3 +51,17 @@ get_user_profile <- function(access_token) {
     stop(paste0("status code: ", response$status_code, "\n error: ", content(response)$error))
   }
 }
+
+get_followed_artists <- function(access_token) {
+  response <- GET(
+    url = "https://api.spotify.com/v1/me/following?type=artist",
+    add_headers("Authorization" = paste0("Bearer ", access_token)),
+    content_type_json()
+  )
+
+  if (response$status_code == 200) {
+    return(fromJSON(rawToChar(response$content)))
+  } else {
+    stop(paste0("status code: ", response$status_code, "\n error: ", content(response)$error))
+  }
+}

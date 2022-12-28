@@ -1,5 +1,11 @@
 # defining server logic ----------------------------------------------
 server <- function(input, output, session) {
+  # create reactive value to hold access_tokens
+  tokens <- reactiveValues(
+    access_token = NULL,
+    refresh_token = NULL
+  )
+
   # show authorizatino promp when the user is not signed in
   output$authorization_prompt <- renderUI({
     spotify_info_card(
@@ -7,7 +13,7 @@ server <- function(input, output, session) {
       card_body = "Authorize the app and give permission to read your Spotify data",
       card_button_id = "authorize",
       card_button_label = "Authorize",
-      color = "pu"
+      color = "green"
     )
   })
 
@@ -20,45 +26,52 @@ server <- function(input, output, session) {
       runjs(paste0("window.open('", auth_url, "', '_blank')"))
 
       showModal(
-        # div(
-        #   class = "custom-modal-content",
-        #   div(
-        #     class = "modal-header even-columns",
-        #     h2(class = "modal-title", "Inter the code"),
-        #     actionButton(class = "modal-close", inputId = "modal_close", label = HTML("&times;"))
-        #   ),
-        #   div(
-        #     class = "modal-body",
-        #     textInput(inputId = "auth_code", label = NULL)
-        #   ),
-        #   div(
-        #     class = "modal-footer",
-        #     actionButton(class = "button-spotify", inputId = "auth_confirm", label = "Confirm")
-        #   )
-        # )
         spotify_modal(
           modal_title = "Inter the code",
           modal_body = textInput(inputId = "auth_code", label = NULL),
           modal_button_id = "auth_confirm",
           modal_button_label = "Confirm",
-          color = "green"
+          color = "yellow"
         )
       )
     }
   )
 
+  # close the modal when close button is clicked
   observeEvent(
     input$modal_close,
     removeModal()
   )
 
+  # when auth_confirm button is clicked, get the access tokens,
+  # then remove the modal and the authorization prompt
   observeEvent(
     input$auth_confirm,
     {
       auth_code <- input$auth_code
-      access_tokens <<- get_access_token(auth_code, redirect_uri, client_id, client_secret)
+      temp <<- get_access_token(auth_code, redirect_uri, client_id, client_secret)
+
       removeModal()
       removeUI(selector = "#authorization_prompt")
+
+      tokens$access_token <- temp$access_token
+      tokens$refresh_token <- temp$refresh_token
     }
   )
+
+  # create the user profile view
+  output$user_profile <- renderUI({
+    req(tokens$access_token)
+
+    user_profile <- get_user_profile(tokens$access_token)
+    followed_artists <- get_followed_artists(tokens$access_token)
+
+    profile_card(
+      name = user_profile$display_name,
+      email = user_profile$email,
+      image_url = user_profile$images[[1]]$url,
+      follower_count = user_profile$followers$total,
+      following_count = followed_artists$artists$total
+    )
+  })
 }

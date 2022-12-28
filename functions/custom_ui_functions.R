@@ -48,3 +48,29 @@ spotify_modal <- function(modal_title, modal_body, modal_button_id, modal_button
 
   return(modal)
 }
+
+# profile_card -------------------------------------------------------
+profile_card <- function(name, email, image_url, follower_count, following_count) {
+  profile_card <- div(
+    class = "container",
+    div(
+      class = "profile-card",
+      div(
+        class = "image-section",
+        img(class = "profile-image", src = image_url, alt = "profile image")
+      ),
+      div(
+        class = "info-section",
+        h2(class = "profile-name", name),
+        p(class = "profile-email", email),
+        div(
+          class = "profile-connection",
+          p("Following: ", span(class = "number", following_count)),
+          p("Followers: ", span(class = "number", follower_count))
+        )
+      )
+    )
+  )
+
+  return(profile_card)
+}

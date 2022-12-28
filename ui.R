@@ -40,6 +40,7 @@ ui <- tags$html(
     ),
 
     # main content ---------------------------------------------------
-    uiOutput("authorization_prompt")
+    uiOutput("authorization_prompt"),
+    uiOutput("user_profile")
   )
 )
