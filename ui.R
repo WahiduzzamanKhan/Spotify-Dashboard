@@ -2,8 +2,9 @@
 ui <- tags$html(
   # adding custom styles ---------------------------------------------
   tags$head(
-    tags$link(rel="preconnect", href="https://fonts.gstatic.com"),
-    tags$link(rel = "stylesheet", href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap"),
+    tags$meta(content = "width=device-width, initial-scale=1", name = "viewport"),
+    tags$link(rel = "preconnect", href = "https://fonts.gstatic.com"),
+    tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap"),
     tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
     useShinyjs()
   ),
