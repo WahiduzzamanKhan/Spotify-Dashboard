@@ -65,3 +65,43 @@ get_followed_artists <- function(access_token) {
     stop(paste0("status code: ", response$status_code, "\n error: ", content(response)$error))
   }
 }
+
+get_top_artists <- function(access_token, time_range = c("long_term", "medium_term", "short_term")) {
+  response <- GET(
+    url = modify_url(
+      url = "https://api.spotify.com/v1/me/top/artists",
+      query = list(
+        limit = 10,
+        time_range = time_range
+      )
+    ),
+    add_headers("Authorization" = paste0("Bearer ", access_token)),
+    content_type_json()
+  )
+
+  if (response$status_code == 200) {
+    return(fromJSON(rawToChar(response$content)))
+  } else {
+    stop(paste0("status code: ", response$status_code, "\n error: ", content(response)$error))
+  }
+}
+
+get_top_tracks <- function(access_token, time_range = c("long_term", "medium_term", "short_term")) {
+  response <- GET(
+    url = modify_url(
+      url = "https://api.spotify.com/v1/me/top/tracks",
+      query = list(
+        limit = 10,
+        time_range = time_range
+      )
+    ),
+    add_headers("Authorization" = paste0("Bearer ", access_token)),
+    content_type_json()
+  )
+
+  if (response$status_code == 200) {
+    return(fromJSON(rawToChar(response$content)))
+  } else {
+    stop(paste0("status code: ", response$status_code, "\n error: ", content(response)$error))
+  }
+}
