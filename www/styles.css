@@ -127,6 +127,18 @@ svg {
   justify-content: space-between;
 }
 
+.two-charts-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.two-charts-row > div {
+  max-width: 630px;
+  margin: var(--size-400) 0;
+}
+
 /*--------------------------------------------------------------
 # general styles
 --------------------------------------------------------------*/
@@ -224,6 +236,10 @@ header {
   cursor: pointer;
 }
 
+.button-spotify:active {
+  scale: 0.9;
+}
+
 /* custom modal */
 #shiny-modal-wrapper {
   position: fixed;
@@ -286,6 +302,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+  margin: var(--size-400) 0;
 }
 
 @media (max-width: 50em) {
@@ -339,5 +356,100 @@ header {
 }
 
 .profile-card .profile-connection .number {
+  color: var(--clr-text-500);
+}
+
+/* custom-radio-input */
+.custom-radio-input .shiny-options-group {
+  display: flex;
+  justify-content: center;
+  gap: var(--size-900);
+}
+
+.custom-radio-input label {
+  cursor: pointer;
+  font-size: var(--fs-300);
+  font-weight: 700;
+  color: var(--clr-text-300);
+}
+
+.custom-radio-input label:hover {
+  color: var(--clr-text-100);
+}
+
+.custom-radio-input label:has(input:checked) {
+  color: var(--clr-text-500);
+}
+
+.custom-radio-input input {
+  appearance: none;
+}
+
+.custom-radio-input label span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--size-200);
+}
+
+.custom-radio-input label span svg {
+  width: var(--size-500);
+  height: var(--size-500);
+}
+
+/* top-artists-card */
+.top-artists {
+  margin: var(--size-400) 0;
+}
+
+.top-artists .tiles {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--size-400);
+}
+
+.top-artists .top-artists-title {
+  color: var(--clr-text-100);
+  font-size: var(--fs-500);
+  font-weight: 700;
+  padding: var(--size-400) 0;
+  text-align: center;
+}
+
+.top-artists .artist-tile {
+  max-width: 190px;
+  min-width: 190px;
+
+  background-color: var(--clr-background-700);
+  color: var(--clr-text-100);
+  padding: var(--size-300);
+  border-radius: var(--size-100);
+}
+
+.top-artists .artist-tile .artist-cover {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.top-artists .artist-tile .text-section {
+  margin-top: var(--size-400);
+}
+
+.top-artists .artist-tile .artist-name {
+  font-size: var(--fs-400);
+  font-weight: 700;
+}
+
+.top-artists .artist-tile .artist-followers,
+.top-artists .artist-tile .artist-popularity {
+  font-size: var(--fs-200);
+}
+
+.top-artists .artist-tile .artist-followers .number,
+.top-artists .artist-tile .artist-popularity .number {
   color: var(--clr-text-500);
 }

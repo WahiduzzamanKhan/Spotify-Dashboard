@@ -6,6 +6,8 @@ ui <- tags$html(
     tags$link(rel = "preconnect", href = "https://fonts.gstatic.com"),
     tags$link(rel = "stylesheet", href = "https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap"),
     tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
+    tags$link(rel = "stylesheet", type = "text/css", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"),
+    tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/js/all.min.js"),
     useShinyjs()
   ),
 
@@ -42,6 +44,8 @@ ui <- tags$html(
 
     # main content ---------------------------------------------------
     uiOutput("authorization_prompt"),
-    uiOutput("user_profile")
+    uiOutput("user_profile"),
+    uiOutput("analysis_type_selector"),
+    uiOutput("analysis")
   )
 )

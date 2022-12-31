@@ -6,6 +6,12 @@ server <- function(input, output, session) {
     refresh_token = NULL
   )
 
+  # create reactive value to hold user data
+  data_store <- reactiveValues(
+    top_artists = NULL,
+    top_tracks = NULL
+  )
+
   # show authorizatino promp when the user is not signed in
   output$authorization_prompt <- renderUI({
     spotify_info_card(
@@ -72,6 +78,52 @@ server <- function(input, output, session) {
       image_url = user_profile$images[[1]]$url,
       follower_count = user_profile$followers$total,
       following_count = followed_artists$artists$total
+    )
+  })
+
+  # take user input for analysis type
+  output$analysis_type_selector <- renderUI({
+    req(tokens$access_token)
+
+    div(
+      class = "container",
+      custom_radio_input(
+        inputId = "analysis_type",
+        choiceNames = list(HTML(paste0('<i class="fa-solid fa-user"></i>', "Artists")), HTML(paste0('<i class="fa-solid fa-music"></i>', "Tracks"))),
+        choiceValues = list("artists", "tracks")
+      )
+    )
+  })
+
+  # get appropriate data for the analysis
+  observeEvent(
+    input$analysis_type,
+    {
+      if (input$analysis_type == "artists" & is.null(data_store$top_artists)) {
+        data_store$top_artists <<- get_top_artists(access_token = tokens$access_token, time_range = "long_term")
+      } else if (input$analysis_type == "tracks" & is.null(data_store$top_tracks)) {
+        data_store$top_tracks <<- get_top_tracks(access_token = tokens$access_token, time_range = "long_term")
+      }
+    }
+  )
+
+  output$top_genre_chart <- renderEcharts4r({
+    top_genre_chart(data_store$top_artists$items$genre)
+  })
+  output$artists_popularity_chart <- renderHighchart({
+    artists_popularity_chart(data_store$top_artists)
+  })
+
+  output$analysis <- renderUI({
+    req(input$analysis_type)
+
+    tagList(
+      div(class = "container", top_artists_card(data_store$top_artists$items)),
+      div(
+        class = "container two-charts-row",
+        echarts4rOutput("top_genre_chart"),
+        highchartOutput("artists_popularity_chart")
+      )
     )
   })
 }

@@ -6,6 +6,8 @@ library(httr)
 library(jsonlite)
 library(RCurl)
 library(dplyr)
+library(echarts4r)
+library(highcharter)
 
 # Load functions -----------------------------------------------------
 source("functions/spotify_api_functions.R")
