@@ -453,3 +453,14 @@ header {
 .top-artists .artist-tile .artist-popularity .number {
   color: var(--clr-text-500);
 }
+
+/* popularity-verdict */
+.popularity-verdict {
+  color: var(--clr-text-100);
+  text-align: center;
+  font-size: var(--fs-500);
+}
+
+.popularity-verdict .spark {
+  color: var(--clr-text-500);
+}

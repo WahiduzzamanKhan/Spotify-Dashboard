@@ -123,7 +123,8 @@ server <- function(input, output, session) {
         class = "container two-charts-row",
         echarts4rOutput("top_genre_chart"),
         highchartOutput("artists_popularity_chart")
-      )
+      ),
+      div(class = "container", popularity_analysis_verdict(data_store$top_artists$items))
     )
   })
 }

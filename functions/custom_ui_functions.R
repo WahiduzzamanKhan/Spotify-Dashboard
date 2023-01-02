@@ -115,7 +115,6 @@ top_artists_card <- function(top_artists_data) {
 
 # top genre chart ------------------------------------------------------
 top_genre_chart <- function(genre_list){
-  message("doing it")
   top_genre <- as.data.frame(table(unlist(genre_list))) %>% select(Genre = Var1, Freq) %>% mutate(Genre = stringr::str_to_title(Genre))
   colors <- e_color_range(top_genre, Freq, colors, colors = c("#FFFFFF", "#1db954"))$colors
 
@@ -139,7 +138,7 @@ top_genre_chart <- function(genre_list){
   return(chart)
 }
 
-# aritsts popularity chart----------------------------------------------
+# aritsts popularity chart ---------------------------------------------
 artists_popularity_chart <- function(top_artists_data) {
   popularity <- top_artists_data$items %>% select(name, popularity)
 
@@ -167,4 +166,26 @@ artists_popularity_chart <- function(top_artists_data) {
     )
 
   return(chart)
+}
+
+# popularity analysis verdict ------------------------------------------
+popularity_analysis_verdict <- function(top_artists_data) {
+  popularity <- top_artists_data %>% select(name, popularity)
+  median <- median(popularity$popularity)
+
+  if (median < 70) {
+    view <- div(
+      class = "popularity-verdict",
+      p("Half or more of your favorite artists have a popularity score less than 70."),
+      p("Looks like you know how to appreciate ", span(class = "spark", "underrated gems!!"))
+    )
+  } else {
+    view <- div(
+      class = "popularity-verdict",
+      p("Half or more of your favorite artists have a popularity score more than 70."),
+      p("So that one song you are listening on loop, is most probably ", span(class = "spark", "on everyone's loop!!"))
+    )
+  }
+
+  return(view)
 }
