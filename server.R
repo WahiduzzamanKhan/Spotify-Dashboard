@@ -117,14 +117,20 @@ server <- function(input, output, session) {
   output$analysis <- renderUI({
     req(input$analysis_type)
 
-    tagList(
-      div(class = "container", top_artists_card(data_store$top_artists$items)),
-      div(
-        class = "container two-charts-row",
-        echarts4rOutput("top_genre_chart"),
-        highchartOutput("artists_popularity_chart")
-      ),
-      div(class = "container", popularity_analysis_verdict(data_store$top_artists$items))
-    )
+    if (input$analysis_type == "artists") {
+      tagList(
+        div(class = "container", top_artists_card(data_store$top_artists$items)),
+        div(
+          class = "container two-charts-row",
+          echarts4rOutput("top_genre_chart"),
+          highchartOutput("artists_popularity_chart")
+        ),
+        div(class = "container", popularity_analysis_verdict(data_store$top_artists$items))
+      )
+    } else if (input$analysis_type == "tracks") {
+      tagList(
+        div(class = "container", top_tracks_table(data_store$top_tracks$items))
+      )
+    }
   })
 }

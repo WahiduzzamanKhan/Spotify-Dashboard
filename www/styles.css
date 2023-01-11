@@ -464,3 +464,12 @@ header {
 .popularity-verdict .spark {
   color: var(--clr-text-500);
 }
+
+/* top-tracks-table */
+.top-tracks .top-tracks-title {
+  color: var(--clr-text-100);
+  font-size: var(--fs-500);
+  font-weight: 700;
+  padding: var(--size-400) 0;
+  text-align: center;
+}

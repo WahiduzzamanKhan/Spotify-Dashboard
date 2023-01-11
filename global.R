@@ -6,12 +6,15 @@ library(httr)
 library(jsonlite)
 library(RCurl)
 library(dplyr)
+library(stringr)
 library(echarts4r)
 library(highcharter)
+library(reactable)
 
 # Load functions -----------------------------------------------------
 source("functions/spotify_api_functions.R")
 source("functions/custom_ui_functions.R")
+source("functions/other_functions.R")
 
 # load api credentials -----------------------------------------------
 client_id <- fromJSON("api_credentials.json")[[1]]
