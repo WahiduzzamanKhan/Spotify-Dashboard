@@ -9,7 +9,8 @@ server <- function(input, output, session) {
   # create reactive value to hold user data
   data_store <- reactiveValues(
     top_artists = NULL,
-    top_tracks = NULL
+    top_tracks = NULL,
+    saved_tracks = NULL
   )
 
   # show authorizatino promp when the user is not signed in
@@ -103,6 +104,7 @@ server <- function(input, output, session) {
         data_store$top_artists <<- get_top_artists(access_token = tokens$access_token, time_range = "long_term")
       } else if (input$analysis_type == "tracks" & is.null(data_store$top_tracks)) {
         data_store$top_tracks <<- get_top_tracks(access_token = tokens$access_token, time_range = "long_term")
+        data_store$saved_tracks <<- get_saved_tracks(access_token = tokens$access_token)
       }
     }
   )
@@ -129,7 +131,8 @@ server <- function(input, output, session) {
       )
     } else if (input$analysis_type == "tracks") {
       tagList(
-        div(class = "container", top_tracks_table(data_store$top_tracks$items))
+        div(class = "container", top_tracks_table(data_store$top_tracks$items)),
+        div(class = "container", saved_tracks_table(data_store$saved_tracks$items$track))
       )
     }
   })

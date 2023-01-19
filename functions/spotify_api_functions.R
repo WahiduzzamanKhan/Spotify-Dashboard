@@ -105,3 +105,23 @@ get_top_tracks <- function(access_token, time_range = c("long_term", "medium_ter
     stop(paste0("status code: ", response$status_code, "\n error: ", content(response)$error))
   }
 }
+
+get_saved_tracks <- function(access_token) {
+  response <- GET(
+    url = modify_url(
+      url = "https://api.spotify.com/v1/me/tracks",
+      query = list(
+        limit = 50,
+        offset = 0
+      )
+    ),
+    add_headers("Authorization" = paste0("Bearer ", access_token)),
+    content_type_json()
+  )
+
+  if (response$status_code == 200) {
+    return(fromJSON(rawToChar(response$content)))
+  } else {
+    stop(paste0("status code: ", response$status_code, "\n error: ", content(response)$error))
+  }
+}

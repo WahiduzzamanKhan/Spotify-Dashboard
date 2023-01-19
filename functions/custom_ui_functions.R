@@ -278,3 +278,93 @@ top_tracks_table <- function(top_tracks_data) {
 
   return(div(class = "top-tracks", h3(class = "top-tracks-title", "Your All-Time Top Tracks"), table))
 }
+
+# top saved table ------------------------------------------------------
+saved_tracks_table <- function(saved_tracks_data) {
+  saved_tracks_data <- data.frame(
+    track_names = saved_tracks_data$name,
+    track_url = saved_tracks_data$external_urls$spotify,
+    artist_names = unlist(lapply(saved_tracks_data$artists, function(artists) {
+      df <- data.frame(name = artists$name, url = artists$external_urls$spotify)
+      df <- df %>% mutate(artist = paste0("<a class='artist-name' href='", url, "' target='_blank'>", name, "</a>"))
+      return(paste(df$artist, collapse = ", "))
+    })),
+    album_names = saved_tracks_data$album$name,
+    album_url = saved_tracks_data$album$external_urls$spotify,
+    album_art_url = unlist(lapply(saved_tracks_data$album$images, function(images) {
+      images <- images %>% filter(height == min(height)) %>% select(url)
+      return(images$url)
+    })),
+    track_popularity = saved_tracks_data$popularity,
+    track_duration = get_time_string(round(saved_tracks_data$duration_ms/1000))
+  )
+
+  saved_tracks_data <- saved_tracks_data %>%
+    mutate(
+      TITLE = paste0("<div class='flex-wrapper'><div class='art-section'><img src='", album_art_url, "'></div><div class='info-section'><a class='track-name' href='", track_url, "' target='_blank'>", track_names, "</a><div>", artist_names, "</div></div></div>"),
+      ALBUM = paste0("<a href='", album_url, "' target='_blank'>", album_names, "</a>")
+    ) %>%
+    select(TITLE, ALBUM, DURATION = track_duration, POPUARITY = track_popularity)
+
+  table <- reactable(
+    data = saved_tracks_data,
+    columns = list(
+      .rownames = colDef(name = "#", width = 40),
+      TITLE = colDef(html = TRUE, minWidth = 200),
+      ALBUM = colDef(html = TRUE)
+    ),
+    rownames = TRUE,
+    highlight = TRUE,
+    theme = reactableTheme(
+      color = "#aaaaaa",
+      backgroundColor = "#121212",
+      borderWidth = "1px",
+      borderColor = "#272727",
+      highlightColor = "#272727",
+      rowHighlightStyle = list(
+        color = "#FFFFFF"
+      ),
+      style = list(
+        fontFamily = "'Figtree', sans-serif",
+        fontSize = ".875rem",
+        fontWeight = 400,
+        cellPadding = "10px 8px",
+        "a" = list(
+          color = "#aaaaaa",
+          textDecoration = "none",
+          "&:hover, &:focus" = list(
+            textDecoration = "underline",
+            textDecorationThickness = "1px"
+          )
+        ),
+        ".flex-wrapper" = list(
+          display = "flex",
+          alignItems = "center",
+          justifyContent = "flex-start",
+          gap = "1rem"
+        ),
+        ".art-section img" = list(
+          width = "40px"
+        ),
+        ".info-section" = list(
+          display = "grid",
+          gridTemplateColumns = "1fr"
+        ),
+        ".track-name" = list(
+          color = "#FFFFFF",
+          fontSize = "1rem"
+        )
+      ),
+      headerStyle = list(
+        color = "#aaaaaa",
+        fontWeight = 400,
+        fontSize = "0.75rem",
+        letterSpacing = "1px",
+        textTransform = "uppercase"
+      )
+    )
+  )
+
+  return(div(class = "saved-tracks", h3(class = "saved-tracks-title", "Your Liked Tracks"), table))
+  #return(table)
+}
