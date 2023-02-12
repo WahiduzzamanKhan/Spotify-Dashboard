@@ -24,16 +24,16 @@ ui <- tags$html(
         HTML(
           '
           <ul class="social-list" role="list" aria-label="social links">
-              <li><a aria-label="linkedin" href="#"><svg class="social-icon">
+              <li><a aria-label="linkedin" href="https://www.linkedin.com/in/wahiduzzaman-khan-2014134007"><svg class="social-icon">
                 <use xlink:href="/img/social-icons.svg#linkedin"></use>
               </svg></a></li>
-              <li><a aria-label="stack-overflow" href="#"><svg class="social-icon">
+              <li><a aria-label="stack-overflow" href="https://stackoverflow.com/users/10488754/wahiduzzaman-khan"><svg class="social-icon">
                 <use xlink:href="/img/social-icons.svg#stack-overflow"></use>
               </svg></a></li>
-              <li><a aria-label="twitter" href="#"><svg class="social-icon">
+              <li><a aria-label="twitter" href="https://twitter.com/WahiduzzamanK11"><svg class="social-icon">
                 <use xlink:href="/img/social-icons.svg#twitter"></use>
               </svg></a></li>
-              <li><a aria-label="github" href="#"><svg class="social-icon">
+              <li><a aria-label="github" href="https://github.com/WahiduzzamanKhan"><svg class="social-icon">
                 <use xlink:href="/img/social-icons.svg#github"></use>
               </svg></a></li>
           </ul>
