@@ -10,7 +10,8 @@ server <- function(input, output, session) {
   data_store <- reactiveValues(
     top_artists = NULL,
     top_tracks = NULL,
-    saved_tracks = NULL
+    saved_tracks = NULL,
+    clustered_features = NULL
   )
 
   # show authorizatino promp when the user is not signed in
@@ -105,6 +106,12 @@ server <- function(input, output, session) {
       } else if (input$analysis_type == "tracks" & is.null(data_store$top_tracks)) {
         data_store$top_tracks <<- get_top_tracks(access_token = tokens$access_token, time_range = "long_term")
         data_store$saved_tracks <<- get_saved_tracks(access_token = tokens$access_token)
+
+        if(nrow(data_store$saved_tracks$items) > 5) {
+          features <- get_track_features(access_token = tokens$access_token, paste0(data_store$saved_tracks$items$track$id, collapse = ","))
+          features <- get_cluster(data = features, nclust = get_optimum_cluster_number(features))
+          data_store$clustered_features <<- features
+        }
       }
     }
   )
@@ -115,6 +122,8 @@ server <- function(input, output, session) {
   output$artists_popularity_chart <- renderHighchart({
     artists_popularity_chart(data_store$top_artists)
   })
+
+
 
   output$analysis <- renderUI({
     req(input$analysis_type)
@@ -132,7 +141,8 @@ server <- function(input, output, session) {
     } else if (input$analysis_type == "tracks") {
       tagList(
         div(class = "container", top_tracks_table(data_store$top_tracks$items)),
-        div(class = "container", saved_tracks_table(data_store$saved_tracks$items$track))
+        div(class = "container", saved_tracks_table(data_store$saved_tracks$items$track)),
+        div(class = "container", get_cluster_view(data_store$saved_tracks, data_store$clustered_features))
       )
     }
   })

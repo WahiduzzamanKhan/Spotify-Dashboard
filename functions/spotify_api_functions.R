@@ -38,6 +38,7 @@ get_access_token <- function(authorization_code, redirect_uri, client_id, client
   }
 }
 
+# functions to fetch user data from spotify -------------------------
 get_user_profile <- function(access_token) {
   response <- GET(
     url = "https://api.spotify.com/v1/me",
@@ -124,4 +125,21 @@ get_saved_tracks <- function(access_token) {
   } else {
     stop(paste0("status code: ", response$status_code, "\n error: ", content(response)$error))
   }
+}
+
+get_track_features <- function(access_token, ids) {
+  response <- GET(
+    url = "https://api.spotify.com/v1/audio-features",
+    query = list(
+      ids = ids
+    ),
+    add_headers("Authorization" = paste0("Bearer ", access_token)),
+    content_type_json()
+  )
+
+  track_features <- fromJSON(rawToChar(response$content))
+  track_features <- track_features$audio_features %>%
+    select(id, energy, danceability, speechiness, acousticness, instrumentalness, valence)
+
+  return(track_features)
 }

@@ -482,3 +482,31 @@ header {
   padding: var(--size-400) 0;
   text-align: center;
 }
+
+/* cluster card */
+.cluster-card .cluster-title {
+  color: var(--clr-text-100);
+  font-size: var(--fs-500);
+  font-weight: 700;
+  padding: var(--size-400) 0;
+  text-align: center;
+}
+
+.cluster-card-body {
+  margin: var(--size-600) 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+@media (max-width: 50em) {
+  .cluster-card-body {
+    flex-direction: column;
+  }
+}
+
+.cluster-spider-chart {
+  min-width: 50%;
+}

@@ -10,6 +10,7 @@ library(stringr)
 library(echarts4r)
 library(highcharter)
 library(reactable)
+library(NbClust)
 
 # Load functions -----------------------------------------------------
 source("functions/spotify_api_functions.R")
