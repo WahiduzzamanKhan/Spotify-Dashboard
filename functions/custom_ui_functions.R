@@ -100,12 +100,16 @@ top_artists_card <- function(top_artists_data) {
   for(i in 1:length(top_artists_data)) {
     tiles[[i]] <- div(
       class = "artist-tile",
-      img(class = "artist-cover", src = top_artists_data$images[[i]]$url[[1]]),
-      div(
-        class = "text-section",
-        h3(class = "artist-name", top_artists_data$name[i]),
-        div(class = "artist-followers", "Followers: ", span(class = "number", format(top_artists_data$followers$total[i], big.mark = ","))),
-        div(class = "artist-popularity", "Popularity: ", span(class = "number", top_artists_data$popularity[i]))
+      a(
+        href = top_artists_data$external_urls$spotify[i],
+        target = "_blank",
+        img(class = "artist-cover", src = top_artists_data$images[[i]]$url[[1]]),
+        div(
+          class = "text-section",
+          h3(class = "artist-name", top_artists_data$name[i]),
+          div(class = "artist-followers", "Followers: ", span(class = "number", format(top_artists_data$followers$total[i], big.mark = ","))),
+          div(class = "artist-popularity", "Popularity: ", span(class = "number", top_artists_data$popularity[i]))
+        )
       )
     )
   }

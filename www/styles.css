@@ -410,6 +410,15 @@ header {
   gap: var(--size-400);
 }
 
+.top-artists .artist-tile a {
+  text-decoration: none;
+  color: var(--clr-text-100);
+}
+
+.top-artists .artist-tile a:visited {
+  color: var(--clr-text-100);
+}
+
 .top-artists .top-artists-title {
   color: var(--clr-text-100);
   font-size: var(--fs-500);
@@ -423,9 +432,17 @@ header {
   min-width: 190px;
 
   background-color: var(--clr-background-700);
-  color: var(--clr-text-100);
   padding: var(--size-300);
+  color: var(--clr-text-100);
+  border: 1px solid var(--clr-background-700);
   border-radius: var(--size-100);
+
+  transition: all .3s;
+}
+
+.top-artists .artist-tile:has(a:hover) {
+  background-color: var(--clr-background-800);
+  border: 1px solid var(--clr-background-700);
 }
 
 .top-artists .artist-tile .artist-cover {
