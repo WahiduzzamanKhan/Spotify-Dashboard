@@ -1,10 +1,13 @@
 # spotify account authorization functions ---------------------------
-get_auth_url <- function(client_id, scope, redirect_uri) {
-  response <-   GET(
+get_auth_url <- function(
+    client_id = Sys.getenv("CLIENT_ID"),
+    scope,
+    redirect_uri) {
+  response <- GET(
     url = modify_url(
       url = "https://accounts.spotify.com/authorize",
       query = list(
-        response_type = 'code',
+        response_type = "code",
         client_id = client_id,
         scope = scope,
         redirect_uri = redirect_uri,
@@ -20,14 +23,18 @@ get_auth_url <- function(client_id, scope, redirect_uri) {
   }
 }
 
-get_access_token <- function(authorization_code, redirect_uri, client_id, client_secret) {
+get_access_token <- function(
+    authorization_code,
+    redirect_uri,
+    client_id = Sys.getenv("CLIENT_ID"),
+    client_secret = Sys.getenv("CLIENT_SECRET")) {
   response <- POST(
     url = "https://accounts.spotify.com/api/token",
     add_headers(
       "Authorization" = paste0("Basic ", RCurl::base64Encode(paste0(client_id, ":", client_secret))),
       "Content-Type" = "application/x-www-form-urlencoded"
     ),
-    body = list(code = authorization_code, redirect_uri = redirect_uri, grant_type = 'authorization_code'),
+    body = list(code = authorization_code, redirect_uri = redirect_uri, grant_type = "authorization_code"),
     encode = "form"
   )
 

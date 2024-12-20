@@ -1,17 +1,39 @@
-get_time_string <- function(x) {
-  hours <- ifelse (floor(x/3600 + x%%3600) == x,"0", as.character(floor(x/Hours)))
-  minutes <- ifelse (floor(x/60 + x%%60) == x,"0", as.character(floor(x/60)))
-  seconds <- x%%60
+set_api_credentials <- function(source = "api_credentials.json") {
+  if (!file.exists(source)) {
+    stop(cli_alert_danger("The file {.file {col_blue(source)}} does not exist"))
+  }
 
-  time_string <- str_glue(str_pad(hours,2,"left","0"),str_pad(minutes,2,"left","0"),str_pad(seconds,2,"left","0"),.sep = ":")
+  credentials <- fromJSON(source)
+
+  if (is.null(credentials[["client_id"]])) {
+    cli_div(theme = list(span.code = list(color = "blue")))
+    stop(cli_alert_danger("The key {.code client_id} does not exist"))
+  }
+  if (is.null(credentials[["client_secret"]])) {
+    cli_div(theme = list(span.code = list(color = "blue")))
+    stop(cli_alert_danger("The key {.code client_secret} does not exist"))
+  }
+
+  Sys.setenv(
+    CLIENT_ID = credentials[["client_id"]],
+    CLIENT_SECRET = credentials[["client_secret"]]
+  )
+}
+
+get_time_string <- function(x) {
+  hours <- ifelse(floor(x / 3600 + x %% 3600) == x, "0", as.character(floor(x / Hours)))
+  minutes <- ifelse(floor(x / 60 + x %% 60) == x, "0", as.character(floor(x / 60)))
+  seconds <- x %% 60
+
+  time_string <- str_glue(str_pad(hours, 2, "left", "0"), str_pad(minutes, 2, "left", "0"), str_pad(seconds, 2, "left", "0"), .sep = ":")
 
   return(time_string)
 }
 get_time_string <- Vectorize(get_time_string)
 
 get_optimum_cluster_number <- function(data) {
-  clust <- NbClust::NbClust(data %>% select(-id) %>% scale(), method = 'complete', index = 'all', max.nc = round(nrow(data)/2,0))$Best.nc[1,]
-  return(as.integer(names(sort(table(as.integer(clust)),decreasing=TRUE)[1])))
+  clust <- NbClust::NbClust(data %>% select(-id) %>% scale(), method = "complete", index = "all", max.nc = round(nrow(data) / 2, 0))$Best.nc[1, ]
+  return(as.integer(names(sort(table(as.integer(clust)), decreasing = TRUE)[1])))
 }
 
 get_cluster <- function(data, nclust) {
@@ -100,7 +122,7 @@ get_mean_features <- function(clustered_features) {
 
 get_cluster_spiders <- function(mean_features) {
   spiders <- lapply(mean_features$cluster_number, function(i) {
-    mean_features[i,-1] |>
+    mean_features[i, -1] |>
       tidyr::gather(key = "Feature") |>
       e_charts(Feature, backgroundColor = "rgba(0,0,0,0)") |>
       e_title(text = NULL) |>

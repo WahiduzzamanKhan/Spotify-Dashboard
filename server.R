@@ -30,7 +30,7 @@ server <- function(input, output, session) {
   observeEvent(
     input$authorize,
     {
-      auth_url <- get_auth_url(client_id, scopes, redirect_uri)
+      auth_url <- get_auth_url(scope = scopes, redirect_uri = redirect_uri)
       runjs(paste0("window.open('", auth_url, "', '_blank')"))
 
       showModal(
@@ -57,7 +57,7 @@ server <- function(input, output, session) {
     input$auth_confirm,
     {
       auth_code <- input$auth_code
-      temp <<- get_access_token(auth_code, redirect_uri, client_id, client_secret)
+      temp <<- get_access_token(authorization_code = auth_code, redirect_uri = redirect_uri)
 
       removeModal()
       removeUI(selector = "#authorization_prompt")
@@ -107,7 +107,7 @@ server <- function(input, output, session) {
         data_store$top_tracks <<- get_top_tracks(access_token = tokens$access_token, time_range = "long_term")
         data_store$saved_tracks <<- get_saved_tracks(access_token = tokens$access_token)
 
-        if(nrow(data_store$saved_tracks$items) > 5) {
+        if (nrow(data_store$saved_tracks$items) > 5) {
           features <- get_track_features(access_token = tokens$access_token, paste0(data_store$saved_tracks$items$track$id, collapse = ","))
           features <- get_cluster(data = features, nclust = get_optimum_cluster_number(features))
           data_store$clustered_features <<- features
