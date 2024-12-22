@@ -23,4 +23,4 @@ set_api_credentials()
 
 # create global variables --------------------------------------------
 scopes <- "user-read-private user-read-email playlist-read-private playlist-read-collaborative user-follow-read user-top-read user-read-recently-played user-library-read"
-redirect_uri <- "https://connector.wahidkhan.me/spotify/"
+redirect_uri <- "http://localhost:8080"

@@ -1,9 +1,32 @@
 # defining server logic ----------------------------------------------
 server <- function(input, output, session) {
   # create reactive value to hold access_tokens
-  tokens <- reactiveValues(
-    access_token = NULL,
-    refresh_token = NULL
+  tokens <- reactiveValues(access_token = NULL, refresh_token = NULL)
+
+  observeEvent(
+    session$clientData,
+    {
+      full_url <- parse_url(paste0(
+        session$clientData$url_protocol, "//",
+        session$clientData$url_hostname,
+        if (!is.null(session$clientData$url_port) && session$clientData$url_port != "") paste0(":", session$clientData$url_port) else "",
+        session$clientData$url_pathname,
+        session$clientData$url_search
+      ))
+      if (!is.null(full_url$query$code)) {
+        temp <- get_access_token(authorization_code = full_url$query$code, redirect_uri = redirect_uri)
+
+        tokens$access_token <- temp$access_token
+        tokens$refresh_token <- temp$refresh_token
+        tokens$created_at <- as.integer(as.POSIXct(Sys.time()))
+        tokens$life_time <- temp$expires_in
+
+        runjs("
+          const baseUrl = window.location.origin;
+          window.history.replaceState(null, '', baseUrl);
+        ")
+      }
+    }
   )
 
   # create reactive value to hold user data
@@ -16,6 +39,7 @@ server <- function(input, output, session) {
 
   # show authorizatino promp when the user is not signed in
   output$authorization_prompt <- renderUI({
+    req(!(isTruthy(tokens$access_token) & isTruthy(tokens$refresh_token)))
     spotify_info_card(
       card_title = "Authorize",
       card_body = "Authorize the app and give permission to read your Spotify data",
@@ -31,39 +55,7 @@ server <- function(input, output, session) {
     input$authorize,
     {
       auth_url <- get_auth_url(scope = scopes, redirect_uri = redirect_uri)
-      runjs(paste0("window.open('", auth_url, "', '_blank')"))
-
-      showModal(
-        spotify_modal(
-          modal_title = "Inter the code",
-          modal_body = textInput(inputId = "auth_code", label = NULL),
-          modal_button_id = "auth_confirm",
-          modal_button_label = "Confirm",
-          color = "yellow"
-        )
-      )
-    }
-  )
-
-  # close the modal when close button is clicked
-  observeEvent(
-    input$modal_close,
-    removeModal()
-  )
-
-  # when auth_confirm button is clicked, get the access tokens,
-  # then remove the modal and the authorization prompt
-  observeEvent(
-    input$auth_confirm,
-    {
-      auth_code <- input$auth_code
-      temp <<- get_access_token(authorization_code = auth_code, redirect_uri = redirect_uri)
-
-      removeModal()
-      removeUI(selector = "#authorization_prompt")
-
-      tokens$access_token <- temp$access_token
-      tokens$refresh_token <- temp$refresh_token
+      runjs(paste0("window.open('", auth_url, "', '_self')"))
     }
   )
 
