@@ -1,6 +1,8 @@
 # defining server logic ----------------------------------------------
 server <- function(input, output, session) {
-  # create reactive value to hold access_tokens
+  # create reactive values
+  auth_code_availabe <- reactiveVal(FALSE)
+  refresh_token_available <- reactiveVal(FALSE)
   tokens <- reactiveValues(access_token = NULL, refresh_token = NULL)
 
   observeEvent(
@@ -13,18 +15,50 @@ server <- function(input, output, session) {
         session$clientData$url_pathname,
         session$clientData$url_search
       ))
+
+      # if url contains code, use it to get access token
       if (!is.null(full_url$query$code)) {
+        auth_code_availabe(TRUE)
         temp <- get_access_token(authorization_code = full_url$query$code, redirect_uri = redirect_uri)
 
         tokens$access_token <- temp$access_token
         tokens$refresh_token <- temp$refresh_token
-        tokens$created_at <- as.integer(as.POSIXct(Sys.time()))
-        tokens$life_time <- temp$expires_in
 
+        # save refresh token as browser cookie
+        set_cookie(
+          cookie_name = "refresh_token",
+          cookie_value = tokens$refresh_token,
+          same_site = "strict"
+        )
+
+        # remove the code from browser address bar
         runjs("
           const baseUrl = window.location.origin;
           window.history.replaceState(null, '', baseUrl);
+          document.title = 'Spotify Dashboard'
         ")
+      } else {
+        # Access cookies from the HTTP header
+        refresh_token <- get_cookie("refresh_token")
+
+        req(refresh_token)
+
+        refresh_token_available(TRUE)
+
+        temp <- refresh_access_token(refresh_token = refresh_token)
+        tokens$access_token <- temp$access_token
+
+        if (!is.null(temp$refresh_token)) {
+          tokens$refresh_token <- temp$refresh_token
+          # save refresh token as browser cookie
+          set_cookie(
+            cookie_name = "refresh_token",
+            cookie_value = tokens$refresh_token,
+            same_site = "strict"
+          )
+        }
+
+        runjs("document.title = 'Spotify Dashboard';")
       }
     }
   )
@@ -39,7 +73,7 @@ server <- function(input, output, session) {
 
   # show authorizatino promp when the user is not signed in
   output$authorization_prompt <- renderUI({
-    req(!(isTruthy(tokens$access_token) & isTruthy(tokens$refresh_token)))
+    req(!(isTruthy(auth_code_availabe()) | isTruthy(refresh_token_available())))
     spotify_info_card(
       card_title = "Authorize",
       card_body = "Authorize the app and give permission to read your Spotify data",

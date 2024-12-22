@@ -49,3 +49,5 @@ ui <- tags$html(
     uiOutput("analysis")
   )
 )
+
+ui <- add_cookie_handlers(ui)
