@@ -45,6 +45,30 @@ get_access_token <- function(
   }
 }
 
+refresh_access_token <- function(
+    refresh_token,
+    client_id = Sys.getenv("CLIENT_ID"),
+    client_secret = Sys.getenv("CLIENT_SECRET")) {
+  response <- POST(
+    url = "https://accounts.spotify.com/api/token",
+    add_headers(
+      "Authorization" = paste0("Basic ", RCurl::base64Encode(paste0(client_id, ":", client_secret))),
+      "Content-Type" = "application/x-www-form-urlencoded"
+    ),
+    body = list(
+      grant_type = "refresh_token",
+      refresh_token = refresh_token
+    ),
+    encode = "form"
+  )
+
+  if (response$status_code == 200) {
+    return(content(response))
+  } else {
+    stop(paste0("status code: ", response$status_code, "\n error: ", content(response)$error))
+  }
+}
+
 # functions to fetch user data from spotify -------------------------
 get_user_profile <- function(access_token) {
   response <- GET(

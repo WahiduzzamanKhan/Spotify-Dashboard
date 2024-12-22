@@ -12,6 +12,7 @@ library(highcharter)
 library(reactable)
 library(NbClust)
 library(cli)
+library(cookies)
 
 # Load functions -----------------------------------------------------
 source("functions/spotify_api_functions.R")
