@@ -1,25 +1,3 @@
-set_api_credentials <- function(source = "api_credentials.json") {
-  if (!file.exists(source)) {
-    stop(cli_alert_danger("The file {.file {col_blue(source)}} does not exist"))
-  }
-
-  credentials <- fromJSON(source)
-
-  if (is.null(credentials[["client_id"]])) {
-    cli_div(theme = list(span.code = list(color = "blue")))
-    stop(cli_alert_danger("The key {.code client_id} does not exist"))
-  }
-  if (is.null(credentials[["client_secret"]])) {
-    cli_div(theme = list(span.code = list(color = "blue")))
-    stop(cli_alert_danger("The key {.code client_secret} does not exist"))
-  }
-
-  Sys.setenv(
-    CLIENT_ID = credentials[["client_id"]],
-    CLIENT_SECRET = credentials[["client_secret"]]
-  )
-}
-
 get_time_string <- function(x) {
   hours <- ifelse(floor(x / 3600 + x %% 3600) == x, "0", as.character(floor(x / Hours)))
   minutes <- ifelse(floor(x / 60 + x %% 60) == x, "0", as.character(floor(x / 60)))
