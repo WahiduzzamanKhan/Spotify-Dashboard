@@ -1,4 +1,4 @@
-FROM rocker/r-base:4.3.3
+FROM rocker/r-base:4.4.2
 
 # copy the app to the image
 RUN mkdir /app
